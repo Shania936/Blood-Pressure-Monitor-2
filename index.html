@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blood Pressure Monitor</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding: 0; }
+    header, footer { background: #003366; color: white; text-align: center; padding: 1em; }
+    nav a { margin: 0 10px; text-decoration: none; color: #003366; font-weight: bold; }
+    .page { display: none; padding: 20px; }
+    .active { display: block; }
+    label { display: block; margin: 10px 0; }
+    input { padding: 5px; width: 200px; }
+    button { background: #003366; color: white; border: none; padding: 10px 15px; margin-top: 10px; cursor: pointer; border-radius: 5px; }
+    button:hover { background: #0055a5; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Blood Pressure Monitor</h1>
+  </header>
+
+  <!-- Password Page -->
+  <div id="passwordPage" class="page active">
+    <h2>Login</h2>
+    <label>Password: <input type="password" id="passwordInput"></label>
+    <button onclick="checkPassword()">Login</button>
+    <p id="passwordError" style="color:red;"></p>
+  </div>
+
+  <!-- Basic Information Page -->
+  <div id="infoPage" class="page">
+    <h2>Basic Information</h2>
+    <label>Name: <input type="text" id="nameInput"></label>
+    <label>Date of Birth: <input type="date" id="dobInput"></label>
+    <label>Health Insurance #: <input type="text" id="insuranceInput"></label>
+    <label>Change Password: <input type="password" id="newPasswordInput"></label>
+    <button onclick="saveBasicInfo()">Save Info</button>
+    <button onclick="goToPage('menuPage')">Go to Menu</button>
+  </div>
+
+  <!-- Menu Page -->
+  <div id="menuPage" class="page">
+    <h2>Menu</h2>
+    <nav>
+      <a href="#" onclick="goToPage('editInfoPage')">Update Basic Information</a>
+      <a href="#" onclick="goToPage('dataEntryPage')">Enter Blood Pressure Data</a>
+      <a href="#" onclick="goToPage('graphPage')">View Graph</a>
+      <a href="#" onclick="goToPage('recommendPage')">Recommendations</a>
+    </nav>
+  </div>
+
+  <!-- Edit Basic Info Page -->
+  <div id="editInfoPage" class="page">
+    <h2>Edit Basic Information</h2>
+    <label>Name: <input type="text" id="editNameInput"></label>
+    <label>Date of Birth: <input type="date" id="editDobInput"></label>
+    <label>Health Insurance #: <input type="text" id="editInsuranceInput"></label>
+    <button onclick="saveEditedInfo()">Save Changes</button>
+    <button onclick="goToPage('menuPage')">Back to Menu</button>
+  </div>
+
+  <!-- Enter Blood Pressure Data Page -->
+  <div id="dataEntryPage" class="page">
+    <h2>Enter Blood Pressure</h2>
+    <label>Systolic: <input type="number" id="systolicInput"></label>
+    <label>Diastolic: <input type="number" id="diastolicInput"></label>
+    <button onclick="saveBPData()">Save Blood Pressure</button>
+    <button onclick="goToPage('menuPage')">Back to Menu</button>
+    <p id="bpMessage" style="color:green;"></p>
+  </div>
+
+  <!-- Graph Page -->
+  <div id="graphPage" class="page">
+    <h2>Graph Data</h2>
+    <p>(Graph will be added later)</p>
+    <button onclick="goToPage('menuPage')">Back to Menu</button>
+  </div>
+
+  <!-- Recommendations Page -->
+  <div id="recommendPage" class="page">
+    <h2>Recommendations</h2>
+    <p>(Recommendations will be added later)</p>
+    <button onclick="goToPage('menuPage')">Back to Menu</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Blood Pressure Monitor App</p>
+  </footer>
+
+  <script>
+    // Temporary storage
+    let userPassword = "1234"; // default password
+    let userInfo = { name:"", dob:"", insurance:"" };
+    let bpData = [];
+
+    function goToPage(pageId) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    // Password Page
+    function checkPassword() {
+      const input = document.getElementById('passwordInput').value;
+      if(input === userPassword) {
+        // Fill the info page inputs with stored values
+        document.getElementById('nameInput').value = userInfo.name;
+        document.getElementById('dobInput').value = userInfo.dob;
+        document.getElementById('insuranceInput').value = userInfo.insurance;
+        document.getElementById('passwordError').innerText = "";
+        goToPage('infoPage');
+      } else {
+        document.getElementById('passwordError').innerText = "Incorrect password!";
+      }
+    }
+
+    // Basic Info Page
+    function saveBasicInfo() {
+      userInfo.name = document.getElementById('nameInput').value;
+      userInfo.dob = document.getElementById('dobInput').value;
+      userInfo.insurance = document.getElementById('insuranceInput').value;
+      const newPass = document.getElementById('newPasswordInput').value;
+      if(newPass) userPassword = newPass;
+      alert("Basic information saved!");
+    }
+
+    // Edit Info Page
+    function saveEditedInfo() {
+      userInfo.name = document.getElementById('editNameInput').value;
+      userInfo.dob = document.getElementById('editDobInput').value;
+      userInfo.insurance = document.getElementById('editInsuranceInput').value;
+      alert("Changes saved!");
+      goToPage('menuPage');
+    }
+
+    // Enter BP Data
+    function saveBPData() {
+      const systolic = document.getElementById('systolicInput').value;
+      const diastolic = document.getElementById('diastolicInput').value;
+      if(systolic && diastolic) {
+        bpData.push({ systolic, diastolic, date: new Date().toLocaleDateString() });
+        document.getElementById('bpMessage').innerText = "Blood pressure saved!";
+        document.getElementById('systolicInput').value = "";
+        document.getElementById('diastolicInput').value = "";
+      } else {
+        alert("Please enter both systolic and diastolic values.");
+      }
+    }
+  </script>
+</body>
+</html>
